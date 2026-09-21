@@ -45,7 +45,7 @@ export default function Education() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: '-80px' }}
                   transition={{ duration: 0.5, delay: i * 0.1 }}
-                  className="glass rounded-2xl p-6"
+                  className="rounded-2xl border border-border bg-surface p-6"
                 >
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <h3 className="font-display text-lg font-semibold text-ink">{ed.degree}</h3>

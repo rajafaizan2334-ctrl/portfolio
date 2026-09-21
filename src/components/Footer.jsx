@@ -2,7 +2,7 @@ import { FiGithub, FiLinkedin, FiMail } from 'react-icons/fi'
 
 export default function Footer() {
   return (
-    <footer className="relative border-t border-white/10 py-10">
+    <footer className="relative z-10 border-t border-white/10 bg-bg py-10">
       <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 text-sm text-muted sm:flex-row">
         <p>© {new Date().getFullYear()} Faizan Saleem. Built with React, Tailwind &amp; Framer Motion.</p>
         <div className="flex items-center gap-4">

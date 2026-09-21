@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { HiArrowDown, HiOutlineMail } from 'react-icons/hi'
 import { FiGithub, FiLinkedin } from 'react-icons/fi'
-import ParticleField from './ParticleField.jsx'
 import MagneticButton from './MagneticButton.jsx'
 import portrait from '../assets/processed/faizan-portrait.webp'
 
@@ -55,23 +54,20 @@ export default function Hero() {
     <section id="top" className="relative flex min-h-screen items-center overflow-hidden pt-28 pb-20">
       <div className="absolute inset-0 bg-grid [mask-image:radial-gradient(ellipse_60%_60%_at_50%_20%,black,transparent)]" />
 
-      <motion.div
-        animate={{ x: [0, 40, 0], y: [0, -30, 0] }}
-        transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
-        className="absolute -left-32 top-10 h-[26rem] w-[26rem] rounded-full bg-violet-600/25 blur-[110px]"
+      <div
+        className="animate-float-slow absolute -left-32 top-10 h-[24rem] w-[24rem] rounded-full bg-violet-600/25 blur-[90px] will-change-transform"
+        aria-hidden="true"
       />
-      <motion.div
-        animate={{ x: [0, -30, 0], y: [0, 40, 0] }}
-        transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
-        className="absolute right-[-6rem] top-40 h-[24rem] w-[24rem] rounded-full bg-cyan-500/20 blur-[110px]"
+      <div
+        className="animate-float absolute right-[-6rem] top-40 h-[22rem] w-[22rem] rounded-full bg-cyan-500/20 blur-[90px] will-change-transform"
+        aria-hidden="true"
+        style={{ animationDelay: '-3s' }}
       />
-      <motion.div
-        animate={{ x: [0, 20, 0], y: [0, -20, 0] }}
-        transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
-        className="absolute bottom-[-6rem] left-1/3 h-[22rem] w-[22rem] rounded-full bg-fuchsia-500/15 blur-[110px]"
+      <div
+        className="animate-float-slow absolute bottom-[-6rem] left-1/3 h-[20rem] w-[20rem] rounded-full bg-fuchsia-500/15 blur-[90px] will-change-transform"
+        aria-hidden="true"
+        style={{ animationDelay: '-6s' }}
       />
-
-      <ParticleField className="pointer-events-auto absolute inset-0 h-full w-full opacity-70" />
 
       <div className="relative z-10 mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-14 px-6 lg:grid-cols-[1.15fr_0.85fr]">
         <div>

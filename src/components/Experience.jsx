@@ -74,7 +74,7 @@ export default function Experience() {
                   />
                 </span>
 
-                <div className="glass rounded-2xl p-6 transition-colors hover:border-violet-400/40">
+                <div className="rounded-2xl border border-border bg-surface p-6 transition-colors hover:border-violet-400/40">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <h3 className="font-display text-xl font-semibold text-ink">{job.role}</h3>
                     <span className="font-mono text-xs text-cyan-300">{job.period}</span>

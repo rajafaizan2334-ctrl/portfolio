@@ -80,7 +80,7 @@ export default function About() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: '-100px' }}
                   transition={{ duration: 0.5, delay: 0.15 + i * 0.08 }}
-                  className="glass rounded-2xl p-4"
+                  className="rounded-2xl border border-border bg-surface p-4"
                 >
                   <fact.icon className="text-cyan-300" size={20} />
                   <div className="mt-3 text-xs uppercase tracking-wide text-muted">

@@ -84,7 +84,7 @@ export default function Skills() {
           {[...MARQUEE_ITEMS, ...MARQUEE_ITEMS].map((item, i) => (
             <span
               key={i}
-              className="glass whitespace-nowrap rounded-full px-5 py-2 font-mono text-sm text-ink/90"
+              className="whitespace-nowrap rounded-full border border-border bg-surface px-5 py-2 font-mono text-sm text-ink/90"
             >
               {item}
             </span>

@@ -29,15 +29,14 @@ export default function Contact() {
     <section id="contact" className="relative py-28">
       <div className="mx-auto max-w-5xl px-6">
         <div className="relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-surface px-8 py-16 text-center sm:px-16">
-          <motion.div
-            animate={{ x: [0, 40, 0], y: [0, -20, 0] }}
-            transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
-            className="absolute -left-20 -top-20 h-72 w-72 rounded-full bg-violet-600/25 blur-[100px]"
+          <div
+            className="animate-float-slow absolute -left-20 -top-20 h-72 w-72 rounded-full bg-violet-600/25 blur-[80px] will-change-transform"
+            aria-hidden="true"
           />
-          <motion.div
-            animate={{ x: [0, -30, 0], y: [0, 30, 0] }}
-            transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
-            className="absolute -bottom-24 -right-16 h-72 w-72 rounded-full bg-cyan-500/20 blur-[100px]"
+          <div
+            className="animate-float absolute -bottom-24 -right-16 h-72 w-72 rounded-full bg-cyan-500/20 blur-[80px] will-change-transform"
+            aria-hidden="true"
+            style={{ animationDelay: '-4s' }}
           />
 
           <motion.div
@@ -82,7 +81,7 @@ export default function Contact() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: '-80px' }}
                   transition={{ duration: 0.5, delay: i * 0.1 }}
-                  className="glass group flex flex-col items-center gap-2 rounded-2xl px-4 py-5 transition-colors hover:border-cyan-300/50"
+                  className="group flex flex-col items-center gap-2 rounded-2xl border border-border bg-surface px-4 py-5 transition-colors hover:border-cyan-300/50"
                 >
                   <c.icon className="text-cyan-300 transition-transform group-hover:scale-110" size={20} />
                   <span className="text-xs text-muted">{c.label}</span>
