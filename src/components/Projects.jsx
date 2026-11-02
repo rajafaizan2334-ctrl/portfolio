@@ -1,109 +1,356 @@
-import { useRef } from 'react'
-import { motion } from 'framer-motion'
-import { HiOutlineArrowUpRight } from 'react-icons/hi2'
+import { useEffect, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { HiArrowsPointingOut, HiXMark } from 'react-icons/hi2'
 import SectionHeading from './SectionHeading.jsx'
+import FlowLine from './FlowLine.jsx'
+import Reveal from './Reveal.jsx'
+import { GhlMock, DashboardMock, SiteMock, RagMock } from './Mockups.jsx'
+import emailReplySync from '../assets/work/email-reply-sync.webp'
+import smsInboundSync from '../assets/work/sms-inbound-sync.webp'
+import smsReplySender from '../assets/work/sms-reply-sender.webp'
+import followupDrafter from '../assets/work/followup-drafter.webp'
+import voiceAgent from '../assets/work/voice-agent.webp'
+import slackDealPipeline from '../assets/work/slack-deal-pipeline.webp'
+import weeklyReports from '../assets/work/weekly-reports.webp'
 
-const PROJECTS = [
+const FEATURED = [
   {
-    title: 'n8n + LLM Support Assistant',
-    tag: 'Customer Support Automation',
-    description:
-      'Automated ticket routing, summarization, and response generation using GPT orchestrated through n8n — cutting first-response time and manual triage.',
-    stack: ['n8n', 'OpenAI API', 'Webhooks', 'CRM'],
-    gradient: 'from-violet-500/25 via-fuchsia-500/10 to-transparent',
+    category: 'Inbox & CRM automation',
+    status: 'Production',
+    title: 'Email Reply → CRM Sync Engine',
+    tagline: 'Every email reply lands in the CRM, matched to the right client, campaign and contact.',
+    flow: [
+      'Reply webhook',
+      'Resolve client workspace',
+      'Find or create campaign',
+      'Upsert contact',
+      'Back-fill sent emails',
+      'Dedupe & write reply',
+    ],
+    stack: ['n8n', 'Email platform API', 'Airtable', 'Gmail alerts'],
+    role: 'Designed, built & maintain',
+    built:
+      'A production n8n pipeline that takes every email reply event, works out which client workspace it belongs to, finds or creates the campaign in the CRM, upserts the contact, back-fills any sent emails not yet logged and writes de-duplicated replies — with retries, cooldown waits and an alert on every failure path.',
+    shots: [{ src: emailReplySync, caption: 'n8n — email reply sync, full canvas' }],
   },
   {
-    title: 'RAG Knowledge Agent',
-    tag: 'Retrieval-Augmented Generation',
-    description:
-      'AI knowledge base with embeddings, vector search, and automated indexing that answers document Q&A with accurate, grounded responses.',
-    stack: ['LangChain', 'Vector Store', 'Embeddings', 'Python'],
-    gradient: 'from-cyan-400/25 via-blue-500/10 to-transparent',
+    category: 'GoHighLevel · SMS',
+    status: 'Production',
+    title: 'Two-Way SMS ↔ CRM Sync',
+    tagline: 'Airtable becomes the SMS inbox: replies come in, answers go out — safely.',
+    flow: [
+      'Inbound SMS',
+      'Fetch GHL conversation',
+      'Upsert contact',
+      'Map tag → campaign',
+      'Log new messages',
+      'Reply from Airtable',
+      'DND & opt-out check',
+      'Send via GHL',
+    ],
+    stack: ['n8n', 'GoHighLevel API', 'Airtable', 'JavaScript'],
+    role: 'Designed & built both workflows',
+    built:
+      'Two workflows. Inbound replies are pulled from GoHighLevel, matched to the contact and campaign (creating the campaign on the fly if needed), de-duplicated and logged. Outbound replies typed in Airtable are sent back through GHL only after DND and opt-out checks pass.',
+    shots: [
+      { src: smsInboundSync, caption: 'n8n — inbound SMS → CRM' },
+      { src: smsReplySender, caption: 'n8n — outbound reply with DND / opt-out guard' },
+    ],
+    mock: GhlMock,
   },
   {
-    title: 'AI Calling Agent',
-    tag: 'Voice Automation',
-    description:
-      'Voice bot combining speech-to-text and GPT with automated call logging and event triggers for real-time, hands-free conversations.',
-    stack: ['Speech-to-Text', 'GPT', 'Automation', 'APIs'],
-    gradient: 'from-emerald-400/25 via-teal-500/10 to-transparent',
+    category: 'AI agent · LLM',
+    status: 'Production',
+    title: 'AI Follow-up Email Drafter',
+    tagline: 'A lead asks for an email — a context-aware draft is waiting before anyone opens the inbox.',
+    flow: [
+      'Lead tagged "email me"',
+      'Normalise timezone & greeting',
+      'Claude drafts the email',
+      'Parse JSON output',
+      'Write draft to CRM',
+    ],
+    stack: ['n8n', 'Claude Sonnet', 'OpenAI', 'Airtable'],
+    role: 'Agent design & prompt engineering',
+    built:
+      'When a lead asks to be contacted by email, an AI agent reads the full conversation history, infers the sender, offer and tone, and writes a personalised, time-of-day-aware follow-up. The draft lands on the contact record so the inbox manager only reviews and sends.',
+    shots: [{ src: followupDrafter, caption: 'n8n — AI agent with Claude + OpenAI models' }],
+  },
+  {
+    category: 'Voice AI',
+    status: 'Built on Vapi',
+    title: 'Customer Support Voice Agent',
+    tagline: 'A banking support agent tuned for natural speed and low cost per call.',
+    flow: ['Caller speaks', 'Soniox STT · 410ms', 'GPT-4.1 · 690ms', 'Vapi voice · 430ms', 'Reply in ~1.5s'],
+    stack: ['Vapi', 'Soniox', 'GPT-4.1', 'Prompt engineering'],
+    role: 'Agent build & tuning',
+    built:
+      'A customer-support voice assistant for a banking use case — speech-to-text, LLM and voice chosen and tuned for about 1.5s end-to-end latency at roughly $0.10 per minute, with a structured system prompt that keeps the agent in scope.',
+    metrics: [
+      ['~1.5s', 'End-to-end latency'],
+      ['~$0.10', 'Cost per minute'],
+      ['1.8%', 'Transcription WER'],
+    ],
+    shots: [{ src: voiceAgent, caption: 'Vapi — assistant configuration' }],
   },
 ]
 
-function ProjectCard({ project, index }) {
-  const ref = useRef(null)
+const MORE = [
+  {
+    title: 'Slack-native Deal Pipeline',
+    summary:
+      'Reps move deals forward by clicking buttons in a Slack thread. A 16-branch router writes every step to Airtable and posts the next prompt in-thread.',
+    stack: 'n8n · Slack Block Kit · Airtable',
+    shot: { src: slackDealPipeline, caption: 'n8n — Slack ↔ Airtable state machine' },
+  },
+  {
+    title: 'Automated Weekly KPI Reports',
+    summary:
+      'Every Friday at 5 PM it pulls each client’s KPIs, renders a table image with QuickChart and posts it to Slack — with alerts if any step fails.',
+    stack: 'n8n · Airtable · QuickChart · Slack',
+    shot: { src: weeklyReports, caption: 'n8n — scheduled reporting' },
+  },
+  {
+    title: 'RAG Knowledge Agent',
+    summary:
+      'An AI knowledge base with embeddings, vector search and automated indexing that answers document questions with grounded, cited responses.',
+    stack: 'LangChain · Vector store · Embeddings · Python',
+    mock: RagMock,
+  },
+]
 
-  const handleMouseMove = (e) => {
-    const el = ref.current
-    if (!el) return
-    const rect = el.getBoundingClientRect()
-    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 14
-    const y = ((e.clientY - rect.top) / rect.height - 0.5) * -14
-    el.style.transform = `perspective(900px) rotateY(${x}deg) rotateX(${y}deg) translateY(-6px)`
-  }
+const INTERFACES = [
+  {
+    title: 'Dashboards & internal tools',
+    summary: 'Front-ends for the automations — KPI views, review queues and admin panels.',
+    stack: 'React · Python · Flask',
+    mock: DashboardMock,
+  },
+  {
+    title: 'Client websites & web apps',
+    summary: '10+ web apps and sites shipped for clients, wired to forms, CRMs and automations.',
+    stack: 'React · JavaScript · TypeScript',
+    mock: SiteMock,
+  },
+]
 
-  const handleLeave = () => {
-    if (ref.current) ref.current.style.transform = 'perspective(900px) rotateY(0deg) rotateX(0deg)'
-  }
+function Field({ label, children }) {
+  return (
+    <div className="border-t border-line py-4">
+      <div className="mono-label mb-2">{label}</div>
+      <div className="text-sm leading-relaxed text-ink">{children}</div>
+    </div>
+  )
+}
+
+function Shot({ shot, onOpen }) {
+  return (
+    <figure className="overflow-hidden rounded-lg border border-line bg-surface">
+      <button
+        onClick={() => onOpen(shot)}
+        className="group relative block w-full cursor-zoom-in"
+        aria-label={`Enlarge: ${shot.caption}`}
+      >
+        <img
+          src={shot.src}
+          alt={shot.caption}
+          loading="lazy"
+          className="max-h-[520px] w-full bg-[#1b1b1b] object-contain"
+        />
+        <span className="mono-label absolute bottom-3 right-3 flex items-center gap-1.5 rounded border border-line bg-bg/80 px-2 py-1 text-ink opacity-80 backdrop-blur transition-opacity group-hover:opacity-100">
+          <HiArrowsPointingOut /> Expand
+        </span>
+      </button>
+      <figcaption className="mono-label border-t border-line px-4 py-3">{shot.caption}</figcaption>
+    </figure>
+  )
+}
+
+function Illustration({ mock: Mock, className = '' }) {
+  return (
+    <figure className={className}>
+      <Mock />
+      <figcaption className="mono-label mt-2 px-1 text-dim">Illustration</figcaption>
+    </figure>
+  )
+}
+
+function Lightbox({ shot, onClose }) {
+  useEffect(() => {
+    if (!shot) return
+    const onKey = (e) => e.key === 'Escape' && onClose()
+    window.addEventListener('keydown', onKey)
+    document.body.style.overflow = 'hidden'
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      document.body.style.overflow = ''
+    }
+  }, [shot, onClose])
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-80px' }}
-      transition={{ duration: 0.6, delay: index * 0.1 }}
-      ref={ref}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleLeave}
-      className="group relative overflow-hidden rounded-3xl border border-white/10 bg-surface p-8 transition-transform duration-300 ease-out will-change-transform"
-    >
-      <div
-        className={`absolute -inset-1 bg-gradient-to-br ${project.gradient} opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100`}
-      />
-      <div className="relative">
-        <div className="flex items-start justify-between">
-          <span className="font-mono text-xs uppercase tracking-widest text-cyan-300">
-            {project.tag}
-          </span>
-          <motion.span
-            whileHover={{ rotate: 45 }}
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-ink"
+    <AnimatePresence>
+      {shot && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={onClose}
+          role="dialog"
+          aria-modal="true"
+          aria-label={shot.caption}
+          className="fixed inset-0 z-[80] flex flex-col items-center justify-center bg-black/90 p-4 backdrop-blur-sm"
+        >
+          <button
+            onClick={onClose}
+            aria-label="Close"
+            className="absolute right-4 top-4 rounded-md border border-line bg-bg p-2 text-ink"
           >
-            <HiOutlineArrowUpRight size={16} />
-          </motion.span>
-        </div>
-        <h3 className="font-display mt-5 text-2xl font-semibold text-ink">{project.title}</h3>
-        <p className="mt-3 text-sm leading-relaxed text-muted">{project.description}</p>
-        <div className="mt-6 flex flex-wrap gap-2">
-          {project.stack.map((s) => (
-            <span
-              key={s}
-              className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs text-muted"
-            >
-              {s}
-            </span>
-          ))}
-        </div>
+            <HiXMark size={18} />
+          </button>
+          <img
+            src={shot.src}
+            alt={shot.caption}
+            onClick={(e) => e.stopPropagation()}
+            className="max-h-[85vh] w-full max-w-[1600px] rounded-lg border border-line object-contain"
+          />
+          <div className="mono-label mt-4">{shot.caption}</div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
+}
+
+function Project({ project, index, onOpen }) {
+  const [first, ...rest] = project.shots
+  return (
+    <article className="border-t border-line pt-10 md:pt-14">
+      <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1.1fr_0.9fr]">
+        <Reveal>
+          <div className="mono-label flex flex-wrap items-center gap-3">
+            <span className="text-accent">Project {String(index + 1).padStart(2, '0')}</span>
+            <span className="text-dim">/</span>
+            <span>{project.category}</span>
+            <span className="rounded border border-line px-2 py-0.5 text-ink">{project.status}</span>
+          </div>
+          <h3 className="mt-5 text-3xl font-semibold tracking-tight text-ink sm:text-4xl">{project.title}</h3>
+          <p className="mt-3 text-lg text-muted">{project.tagline}</p>
+          {project.metrics && (
+            <dl className="mt-8 grid grid-cols-3 gap-px overflow-hidden rounded-lg border border-line bg-line">
+              {project.metrics.map(([num, label]) => (
+                <div key={label} className="bg-surface p-4">
+                  <dt className="text-2xl font-semibold text-ink">{num}</dt>
+                  <dd className="mt-1 text-xs text-muted">{label}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
+        </Reveal>
+
+        <Reveal delay={0.08}>
+          <Field label="What I built">{project.built}</Field>
+          <div className="grid grid-cols-2 gap-6">
+            <Field label="Role">{project.role}</Field>
+            <Field label="Stack">
+              <span className="font-mono text-xs">{project.stack.join(' · ')}</span>
+            </Field>
+          </div>
+        </Reveal>
       </div>
-    </motion.div>
+
+      <Reveal delay={0.1} className="mt-8">
+        <div className="mono-label mb-3 flex items-center justify-between">
+          <span>System flow</span>
+          <span>{project.flow.length} steps</span>
+        </div>
+        <FlowLine steps={project.flow} />
+      </Reveal>
+
+      <div className="mt-6 space-y-4">
+        <Reveal>
+          <Shot shot={first} onOpen={onOpen} />
+        </Reveal>
+        {(rest.length > 0 || project.mock) && (
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            {rest.map((shot) => (
+              <Reveal key={shot.caption}>
+                <Shot shot={shot} onOpen={onOpen} />
+              </Reveal>
+            ))}
+            {project.mock && (
+              <Reveal>
+                <Illustration mock={project.mock} className="h-full" />
+              </Reveal>
+            )}
+          </div>
+        )}
+      </div>
+    </article>
+  )
+}
+
+function Card({ item, onOpen, index }) {
+  return (
+    <Reveal delay={index * 0.06} className="flex flex-col">
+      {item.shot ? <Shot shot={item.shot} onOpen={onOpen} /> : <Illustration mock={item.mock} />}
+      <h4 className="mt-5 text-xl font-semibold text-ink">{item.title}</h4>
+      <p className="mt-2 flex-1 text-sm leading-relaxed text-muted">{item.summary}</p>
+      <div className="mt-4 border-t border-line pt-3 font-mono text-xs text-ink">{item.stack}</div>
+    </Reveal>
+  )
+}
+
+function SubHeading({ label, title }) {
+  return (
+    <Reveal className="mb-10 border-t border-line pt-10 md:pt-14">
+      <div className="mono-label text-accent">{label}</div>
+      <h3 className="mt-4 text-3xl font-semibold tracking-tight text-ink sm:text-4xl">{title}</h3>
+    </Reveal>
   )
 }
 
 export default function Projects() {
+  const [open, setOpen] = useState(null)
+
   return (
-    <section id="projects" className="relative py-28">
-      <div className="mx-auto max-w-6xl px-6">
+    <section id="work" className="relative py-24 md:py-32">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <SectionHeading
-          eyebrow="Selected work"
-          title="Systems I've designed & shipped"
-          description="A few of the agents and automations built to replace manual, repetitive work with reliable pipelines."
+          index="04"
+          label="Selected work"
+          title={
+            <>
+              Systems built to <span className="text-muted">take work off people's plates.</span>
+            </>
+          }
+          description="Real production workflows, shown the way they run — step by step, from trigger to action. Client names and IDs are blurred."
         />
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {PROJECTS.map((project, i) => (
-            <ProjectCard key={project.title} project={project} index={i} />
+
+        <div className="space-y-20 md:space-y-28">
+          {FEATURED.map((project, i) => (
+            <Project key={project.title} project={project} index={i} onOpen={setOpen} />
           ))}
         </div>
+
+        <div className="mt-20 md:mt-28">
+          <SubHeading label="More from the stack" title="Reporting, pipelines and knowledge agents." />
+          <div className="grid grid-cols-1 gap-10 md:grid-cols-3 md:gap-6">
+            {MORE.map((item, i) => (
+              <Card key={item.title} item={item} index={i} onOpen={setOpen} />
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-20 md:mt-28">
+          <SubHeading label="Web + system development" title="I also build the interface around the system." />
+          <div className="grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-6">
+            {INTERFACES.map((item, i) => (
+              <Card key={item.title} item={item} index={i} onOpen={setOpen} />
+            ))}
+          </div>
+        </div>
       </div>
+
+      <Lightbox shot={open} onClose={() => setOpen(null)} />
     </section>
   )
 }

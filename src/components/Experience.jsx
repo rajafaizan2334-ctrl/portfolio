@@ -1,5 +1,9 @@
-import { motion } from 'framer-motion'
+import { useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { HiPlus, HiMinus } from 'react-icons/hi'
 import SectionHeading from './SectionHeading.jsx'
+import FlowLine from './FlowLine.jsx'
+import StatusDot from './StatusDot.jsx'
 
 const EXPERIENCE = [
   {
@@ -7,11 +11,11 @@ const EXPERIENCE = [
     org: 'UNITZERO (Pvt.) Ltd',
     period: 'Oct 2025 — Present',
     location: 'Pakistan',
+    current: true,
     points: [
       'Design and deploy AI agents, LLM-powered assistants, and chatbots integrated with business tools, APIs, and knowledge bases.',
       'Build and maintain automation workflows that streamline operations and reduce manual effort on repetitive tasks.',
     ],
-    current: true,
   },
   {
     role: 'Automation Engineer',
@@ -36,71 +40,111 @@ const EXPERIENCE = [
   },
 ]
 
-export default function Experience() {
+const LOGIC = [
+  { label: 'Trigger', note: 'Webhook, form, call or schedule' },
+  { label: 'Data', note: 'Enrich, clean, fetch context' },
+  { label: 'LLM', note: 'Classify, summarise, draft' },
+  { label: 'Decision', note: 'Rules and routing' },
+  { label: 'Automation', note: 'n8n / make.com run' },
+  { label: 'Action', note: 'CRM, message, booking' },
+]
+
+function Record({ job, index, open, onToggle }) {
   return (
-    <section id="experience" className="relative py-28">
-      <div className="mx-auto max-w-5xl px-6">
+    <motion.li
+      initial={{ opacity: 0, y: 18 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-80px' }}
+      transition={{ duration: 0.5, delay: index * 0.06 }}
+      className={`rounded-lg border bg-surface transition-colors ${open ? 'border-dim' : 'border-line'}`}
+    >
+      <button
+        onClick={onToggle}
+        aria-expanded={open}
+        className="grid w-full grid-cols-1 gap-3 p-5 text-left sm:p-6 md:grid-cols-[110px_190px_1fr_auto] md:items-center md:gap-6"
+      >
+        <span className="mono-label text-accent">Log.{String(index + 1).padStart(2, '0')}</span>
+        <span className="font-mono text-xs text-muted">{job.period}</span>
+        <span>
+          <span className="block text-lg font-semibold text-ink sm:text-xl">{job.role}</span>
+          <span className="text-sm text-muted">
+            {job.org} · {job.location}
+          </span>
+        </span>
+        <span className="mono-label flex items-center gap-3">
+          {job.current ? (
+            <span className="flex items-center gap-2 text-ink">
+              <StatusDot /> Active
+            </span>
+          ) : (
+            <span>Complete</span>
+          )}
+          <span className="flex h-7 w-7 items-center justify-center rounded border border-line text-ink">
+            {open ? <HiMinus size={12} /> : <HiPlus size={12} />}
+          </span>
+        </span>
+      </button>
+
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            className="overflow-hidden"
+          >
+            <ul className="space-y-3 border-t border-line px-5 py-5 sm:px-6 md:pl-[158px]">
+              {job.points.map((p, i) => (
+                <li key={p} className="flex gap-4 text-sm leading-relaxed text-muted">
+                  <span className="font-mono text-xs text-dim">{String(i + 1).padStart(2, '0')}</span>
+                  {p}
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.li>
+  )
+}
+
+export default function Experience() {
+  const [open, setOpen] = useState(0)
+
+  return (
+    <section id="experience" className="relative py-24 md:py-32">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <SectionHeading
-          eyebrow="Career"
-          title="Where I've put this to work"
-          description="A quick tour through the teams and clients I've shipped AI systems for."
+          index="03"
+          label="Experience"
+          title={
+            <>
+              Where I've put this to work, <span className="text-muted">logged like a system.</span>
+            </>
+          }
         />
 
-        <div className="relative">
-          <div className="absolute left-[11px] top-2 bottom-2 w-px bg-gradient-to-b from-violet-400 via-white/15 to-transparent sm:left-[15px]" />
+        <ol className="space-y-3">
+          {EXPERIENCE.map((job, i) => (
+            <Record
+              key={job.role + job.org}
+              job={job}
+              index={i}
+              open={open === i}
+              onToggle={() => setOpen(open === i ? -1 : i)}
+            />
+          ))}
+        </ol>
 
-          <div className="space-y-12">
-            {EXPERIENCE.map((job, i) => (
-              <motion.div
-                key={job.role + job.org}
-                initial={{ opacity: 0, x: -24 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: 0.6, delay: i * 0.05 }}
-                className="relative pl-10 sm:pl-12"
-              >
-                <span className="absolute left-0 top-1.5 flex h-6 w-6 items-center justify-center sm:left-1">
-                  <motion.span
-                    animate={job.current ? { scale: [1, 1.35, 1], opacity: [0.6, 0, 0.6] } : {}}
-                    transition={{ duration: 2.2, repeat: Infinity }}
-                    className={`absolute h-6 w-6 rounded-full ${job.current ? 'bg-cyan-400/40' : ''}`}
-                  />
-                  <span
-                    className={`relative h-3 w-3 rounded-full border-2 ${
-                      job.current
-                        ? 'border-cyan-300 bg-cyan-400'
-                        : 'border-violet-400 bg-bg'
-                    }`}
-                  />
-                </span>
-
-                <div className="rounded-2xl border border-border bg-surface p-6 transition-colors hover:border-violet-400/40">
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <h3 className="font-display text-xl font-semibold text-ink">{job.role}</h3>
-                    <span className="font-mono text-xs text-cyan-300">{job.period}</span>
-                  </div>
-                  <div className="mt-1 flex flex-wrap items-center gap-2 text-sm text-muted">
-                    <span className="text-violet-300">{job.org}</span>
-                    <span aria-hidden>·</span>
-                    <span>{job.location}</span>
-                    {job.current && (
-                      <span className="ml-1 rounded-full border border-cyan-400/40 bg-cyan-400/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-cyan-300">
-                        Current
-                      </span>
-                    )}
-                  </div>
-                  <ul className="mt-4 space-y-2">
-                    {job.points.map((p) => (
-                      <li key={p} className="flex gap-2 text-sm leading-relaxed text-muted">
-                        <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-violet-400" />
-                        {p}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </motion.div>
-            ))}
+        <div className="mt-16">
+          <div className="mono-label mb-4 flex items-center justify-between">
+            <span>Automation logic — how most of my systems run</span>
+            <span className="flex items-center gap-2 text-ink">
+              <StatusDot /> Live
+            </span>
           </div>
+          <FlowLine steps={LOGIC} />
         </div>
       </div>
     </section>

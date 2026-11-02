@@ -1,100 +1,118 @@
-import { motion } from 'framer-motion'
-import { HiOutlineMail, HiOutlinePhone, HiOutlineLocationMarker } from 'react-icons/hi'
-import { FiLinkedin } from 'react-icons/fi'
-import MagneticButton from './MagneticButton.jsx'
+import { useState } from 'react'
+import { HiArrowRight, HiArrowUpRight } from 'react-icons/hi2'
+import SectionHeading from './SectionHeading.jsx'
+import Reveal from './Reveal.jsx'
+import { SITE } from '../site.js'
 
-const CONTACTS = [
-  {
-    icon: HiOutlineMail,
-    label: 'Email',
-    value: 'rajafaizan2554@gmail.com',
-    href: 'mailto:rajafaizan2554@gmail.com',
-  },
-  {
-    icon: HiOutlinePhone,
-    label: 'Phone',
-    value: '+92 318 5236412',
-    href: 'tel:+923185236412',
-  },
-  {
-    icon: FiLinkedin,
-    label: 'LinkedIn',
-    value: 'linkedin.com/in/faizansaleem',
-    href: 'https://www.linkedin.com/in/faizansaleem-2965b1265',
-  },
+const CHANNELS = [
+  { label: 'Email', value: SITE.email, href: `mailto:${SITE.email}` },
+  { label: 'Phone', value: SITE.phone, href: SITE.phoneHref },
+  { label: 'LinkedIn', value: 'in/faizansaleem', href: SITE.linkedin },
+  { label: 'GitHub', value: 'rajafaizan2334-ctrl', href: SITE.github },
 ]
 
+const inputClass =
+  'w-full rounded-md border border-line bg-bg px-4 py-3 text-sm text-ink placeholder:text-dim outline-none transition-colors focus:border-accent'
+
 export default function Contact() {
+  const [form, setForm] = useState({ name: '', email: '', message: '' })
+  const update = (key) => (e) => setForm({ ...form, [key]: e.target.value })
+
+  // No backend: the form composes an email in the visitor's mail app.
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    const subject = `Portfolio enquiry from ${form.name}`
+    const body = `${form.message}\n\n— ${form.name} (${form.email})`
+    window.location.href = `mailto:${SITE.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+  }
+
   return (
-    <section id="contact" className="relative py-28">
-      <div className="mx-auto max-w-5xl px-6">
-        <div className="relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-surface px-8 py-16 text-center sm:px-16">
-          <div
-            className="animate-float-slow absolute -left-20 -top-20 h-72 w-72 rounded-full bg-violet-600/25 blur-[80px] will-change-transform"
-            aria-hidden="true"
-          />
-          <div
-            className="animate-float absolute -bottom-24 -right-16 h-72 w-72 rounded-full bg-cyan-500/20 blur-[80px] will-change-transform"
-            aria-hidden="true"
-            style={{ animationDelay: '-4s' }}
-          />
+    <section id="contact" className="relative py-24 md:py-32">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        <SectionHeading
+          index="07"
+          label="Contact"
+          title={
+            <>
+              Got a workflow worth automating? <span className="text-muted">Let's build it.</span>
+            </>
+          }
+        />
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.6 }}
-            className="relative"
-          >
-            <div className="flex items-center justify-center gap-3 text-sm font-mono uppercase tracking-[0.25em] text-violet-300/80">
-              <span className="h-px w-8 bg-gradient-to-r from-violet-400 to-cyan-300" />
-              Get in touch
-              <span className="h-px w-8 bg-gradient-to-l from-violet-400 to-cyan-300" />
-            </div>
-            <h2 className="font-display mx-auto mt-5 max-w-2xl text-3xl font-semibold text-ink sm:text-4xl md:text-5xl">
-              Got a workflow worth automating?{' '}
-              <span className="text-gradient">Let's build it.</span>
-            </h2>
-            <p className="mx-auto mt-5 max-w-xl text-muted">
-              Open to freelance projects, full-time roles, and collaborations around AI agents,
-              RAG systems, and automation. I usually reply within a day.
-            </p>
-
-            <div className="mt-10 flex justify-center">
-              <MagneticButton
-                href="mailto:rajafaizan2554@gmail.com"
-                className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-500 to-cyan-400 px-8 py-3.5 text-sm font-semibold text-bg shadow-[0_0_40px_-8px_rgba(124,92,255,0.7)]"
-              >
-                <HiOutlineMail size={18} />
-                Say hello
-              </MagneticButton>
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
+          <Reveal>
+            <div className="overflow-hidden rounded-lg border border-line bg-surface">
+              <div className="mono-label flex items-center justify-between border-b border-line px-5 py-3">
+                <span>faizan@khi: ~</span>
+                <span className="text-accent">zsh</span>
+              </div>
+              <div className="space-y-2 p-5 font-mono text-sm leading-relaxed">
+                <p className="text-ink">
+                  <span className="text-accent">$</span> connect --with-faizan
+                  <span className="ml-1 inline-block h-4 w-2 translate-y-0.5 animate-blink bg-ink" />
+                </p>
+                <p className="text-muted">&gt; open to: freelance, full-time roles, collaborations</p>
+                <p className="text-muted">&gt; builds: ai agents · rag systems · automations</p>
+                <p className="text-muted">&gt; reply time: usually within a day</p>
+              </div>
             </div>
 
-            <div className="mx-auto mt-14 grid max-w-2xl grid-cols-1 gap-4 sm:grid-cols-3">
-              {CONTACTS.map((c, i) => (
-                <motion.a
-                  key={c.label}
-                  href={c.href}
-                  target={c.href.startsWith('http') ? '_blank' : undefined}
-                  rel={c.href.startsWith('http') ? 'noreferrer' : undefined}
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: '-80px' }}
-                  transition={{ duration: 0.5, delay: i * 0.1 }}
-                  className="group flex flex-col items-center gap-2 rounded-2xl border border-border bg-surface px-4 py-5 transition-colors hover:border-cyan-300/50"
-                >
-                  <c.icon className="text-cyan-300 transition-transform group-hover:scale-110" size={20} />
-                  <span className="text-xs text-muted">{c.label}</span>
-                  <span className="break-all text-sm font-medium text-ink">{c.value}</span>
-                </motion.a>
+            <ul className="mt-6 border-t border-line">
+              {CHANNELS.map((c) => (
+                <li key={c.label}>
+                  <a
+                    href={c.href}
+                    target={c.href.startsWith('http') ? '_blank' : undefined}
+                    rel={c.href.startsWith('http') ? 'noreferrer' : undefined}
+                    className="group flex items-center gap-4 border-b border-line py-4"
+                  >
+                    <span className="mono-label w-20 shrink-0">{c.label}</span>
+                    <span className="flex-1 truncate text-ink transition-colors group-hover:text-accent">
+                      {c.value}
+                    </span>
+                    <HiArrowUpRight className="text-dim transition-colors group-hover:text-accent" />
+                  </a>
+                </li>
               ))}
-            </div>
+            </ul>
+          </Reveal>
 
-            <div className="mt-10 flex items-center justify-center gap-2 text-xs text-muted">
-              <HiOutlineLocationMarker />
-              Karachi, Sindh, Pakistan — available remote, worldwide
-            </div>
-          </motion.div>
+          <Reveal delay={0.08}>
+            <form onSubmit={handleSubmit} className="rounded-lg border border-line bg-surface p-5 sm:p-6">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <label className="block">
+                  <span className="mono-label mb-2 block">Name</span>
+                  <input required value={form.name} onChange={update('name')} placeholder="Your name" className={inputClass} />
+                </label>
+                <label className="block">
+                  <span className="mono-label mb-2 block">Email</span>
+                  <input
+                    required
+                    type="email"
+                    value={form.email}
+                    onChange={update('email')}
+                    placeholder="you@company.com"
+                    className={inputClass}
+                  />
+                </label>
+              </div>
+              <label className="mt-4 block">
+                <span className="mono-label mb-2 block">Message</span>
+                <textarea
+                  required
+                  rows={6}
+                  value={form.message}
+                  onChange={update('message')}
+                  placeholder="What would you like to automate?"
+                  className={`${inputClass} resize-none`}
+                />
+              </label>
+              <button type="submit" className="btn btn-primary mt-5 w-full">
+                Send message <HiArrowRight />
+              </button>
+              <p className="mt-3 text-center text-xs text-dim">Opens your email app with the message filled in.</p>
+            </form>
+          </Reveal>
         </div>
       </div>
     </section>

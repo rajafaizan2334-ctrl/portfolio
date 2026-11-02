@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { HiMenu, HiX } from 'react-icons/hi'
+import { HiMenuAlt4, HiX } from 'react-icons/hi'
+import StatusDot from './StatusDot.jsx'
 
 const LINKS = [
-  { href: '#about', label: 'About' },
-  { href: '#skills', label: 'Skills' },
+  { href: '#work', label: 'Work' },
   { href: '#experience', label: 'Experience' },
-  { href: '#projects', label: 'Projects' },
-  { href: '#education', label: 'Education' },
+  { href: '#systems', label: 'Systems' },
+  { href: '#about', label: 'About' },
   { href: '#contact', label: 'Contact' },
 ]
 
@@ -39,63 +39,53 @@ export default function Navbar() {
 
   return (
     <>
-      <motion.header
-        initial={{ y: -80, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.7, ease: 'easeOut' }}
-        className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
-          scrolled ? 'py-3' : 'py-5'
+      <header
+        className={`fixed inset-x-0 top-0 z-50 border-b transition-colors duration-300 ${
+          scrolled || open ? 'border-line bg-bg/85 backdrop-blur-md' : 'border-transparent'
         }`}
       >
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6">
-          <a
-            href="#top"
-            className="font-display text-lg font-semibold tracking-tight text-ink"
-          >
-            Faizan<span className="text-gradient">.dev</span>
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
+          <a href="#top" className="text-lg font-bold tracking-tight text-ink">
+            FAIZAN<span className="text-accent">.</span>
           </a>
 
-          <nav
-            className={`hidden items-center gap-1 rounded-full px-2 py-2 md:flex transition-all duration-500 ${
-              scrolled ? 'glass' : 'border border-transparent'
-            }`}
-          >
+          <nav className="hidden items-center gap-7 md:flex">
             {LINKS.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
-                className={`relative rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
-                  active === link.href ? 'text-ink' : 'text-muted hover:text-ink'
+                className={`mono-label flex items-center gap-2 transition-colors hover:text-ink ${
+                  active === link.href ? 'text-ink' : ''
                 }`}
               >
-                {active === link.href && (
-                  <motion.span
-                    layoutId="nav-pill"
-                    className="absolute inset-0 rounded-full bg-white/10"
-                    transition={{ type: 'spring', bounce: 0.25, duration: 0.5 }}
-                  />
-                )}
-                <span className="relative z-10">{link.label}</span>
+                <span
+                  className={`h-1 w-1 rounded-full bg-accent transition-opacity ${
+                    active === link.href ? 'opacity-100' : 'opacity-0'
+                  }`}
+                />
+                {link.label}
               </a>
             ))}
           </nav>
 
           <a
             href="#contact"
-            className="hidden rounded-full border border-white/15 bg-white/5 px-5 py-2 text-sm font-medium text-ink transition hover:border-violet-400/60 hover:bg-violet-400/10 md:inline-flex"
+            className="mono-label hidden items-center gap-2 rounded-full border border-line px-3 py-1.5 text-ink transition-colors hover:border-muted lg:inline-flex"
           >
-            Let's talk
+            <StatusDot />
+            Available for work
           </a>
 
           <button
-            aria-label="Toggle menu"
+            aria-label={open ? 'Close menu' : 'Open menu'}
+            aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
-            className="glass rounded-full p-2.5 text-ink md:hidden"
+            className="rounded-md border border-line p-2 text-ink md:hidden"
           >
-            {open ? <HiX size={20} /> : <HiMenu size={20} />}
+            {open ? <HiX size={18} /> : <HiMenuAlt4 size={18} />}
           </button>
         </div>
-      </motion.header>
+      </header>
 
       <AnimatePresence>
         {open && (
@@ -103,28 +93,28 @@ export default function Navbar() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-40 bg-bg/95 backdrop-blur-xl md:hidden"
+            className="fixed inset-0 z-40 bg-bg/95 pt-24 backdrop-blur-md md:hidden"
           >
-            <motion.nav
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.1 }}
-              className="flex h-full flex-col items-center justify-center gap-8"
-            >
+            <nav className="flex flex-col px-4">
               {LINKS.map((link, i) => (
                 <motion.a
                   key={link.href}
                   href={link.href}
                   onClick={() => setOpen(false)}
-                  initial={{ y: 16, opacity: 0 }}
+                  initial={{ y: 12, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.1 + i * 0.06 }}
-                  className="font-display text-3xl font-medium text-ink"
+                  transition={{ delay: 0.05 + i * 0.05 }}
+                  className="flex items-baseline gap-4 border-b border-line py-5 text-3xl font-semibold text-ink"
                 >
+                  <span className="font-mono text-xs text-accent">0{i + 1}</span>
                   {link.label}
                 </motion.a>
               ))}
-            </motion.nav>
+              <div className="mono-label mt-8 flex items-center gap-2 text-ink">
+                <StatusDot />
+                Available for work
+              </div>
+            </nav>
           </motion.div>
         )}
       </AnimatePresence>
