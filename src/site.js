@@ -3,9 +3,9 @@ export const SITE = {
   name: 'Faizan Saleem',
   role: 'AI Engineer & Founder',
   // Your agency's name — shown in the hero, about and experience once set.
-  agency: '',
+  agency: 'Axonnmatrix',
   location: 'Karachi, Pakistan',
-  email: 'rajafaizan2554@gmail.com',
+  email: 'faizan@axonnmatrix.tech',
   phone: '+92 318 5236412',
   phoneHref: 'tel:+923185236412',
   linkedin: 'https://www.linkedin.com/in/faizan-saleem-2965b1265',
