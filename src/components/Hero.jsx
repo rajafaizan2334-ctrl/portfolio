@@ -18,11 +18,12 @@ const TICKER = [
   'LangChain',
   'Python',
   'React',
+  'Luxury web design',
 ]
 
 const STATS = [
-  ['1.5+', 'Years building AI systems'],
-  ['10+', 'Apps & automations shipped'],
+  ['2+', 'Years building AI systems'],
+  ['10+', 'Apps, sites & automations shipped'],
   ['3', 'Teams & founders served'],
 ]
 
@@ -56,9 +57,10 @@ export default function Hero() {
           </motion.h1>
 
           <motion.p {...rise(0.18)} className="mt-7 max-w-xl text-lg leading-relaxed text-muted">
-            I'm Faizan — an AI Engineer at <span className="text-ink">UNITZERO</span>. I design LLM
-            agents, RAG pipelines and n8n / make.com automations that connect models to real CRMs,
-            APIs and people.
+            I'm Faizan — AI engineer and founder of{' '}
+            <span className="text-ink">{SITE.agency || 'an AI agency & software studio'}</span>. I build
+            AI agents, n8n / make.com automations and modern, premium websites for businesses that want
+            their work to run itself.
           </motion.p>
 
           <motion.div {...rise(0.26)} className="mt-9 flex flex-wrap items-center gap-3">

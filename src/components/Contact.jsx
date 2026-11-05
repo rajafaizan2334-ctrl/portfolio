@@ -7,7 +7,7 @@ import { SITE } from '../site.js'
 const CHANNELS = [
   { label: 'Email', value: SITE.email, href: `mailto:${SITE.email}` },
   { label: 'Phone', value: SITE.phone, href: SITE.phoneHref },
-  { label: 'LinkedIn', value: 'in/faizansaleem', href: SITE.linkedin },
+  { label: 'LinkedIn', value: 'in/faizan-saleem-2965b1265', href: SITE.linkedin },
   { label: 'GitHub', value: 'rajafaizan2334-ctrl', href: SITE.github },
 ]
 
@@ -51,8 +51,8 @@ export default function Contact() {
                   <span className="text-accent">$</span> connect --with-faizan
                   <span className="ml-1 inline-block h-4 w-2 translate-y-0.5 animate-blink bg-ink" />
                 </p>
-                <p className="text-muted">&gt; open to: freelance, full-time roles, collaborations</p>
-                <p className="text-muted">&gt; builds: ai agents · rag systems · automations</p>
+                <p className="text-muted">&gt; status: taking new client projects</p>
+                <p className="text-muted">&gt; builds: ai agents · automations · premium websites</p>
                 <p className="text-muted">&gt; reply time: usually within a day</p>
               </div>
             </div>
@@ -103,7 +103,7 @@ export default function Contact() {
                   rows={6}
                   value={form.message}
                   onChange={update('message')}
-                  placeholder="What would you like to automate?"
+                  placeholder="Tell me about your project — an AI agent, an automation or a website."
                   className={`${inputClass} resize-none`}
                 />
               </label>

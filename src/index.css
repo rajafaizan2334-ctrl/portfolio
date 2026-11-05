@@ -3,6 +3,8 @@
 @theme {
   --font-sans: "Geist", "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  /* Only used inside the luxury website concepts. */
+  --font-serif: "Cormorant Garamond", Georgia, serif;
 
   --color-bg: #050505;
   --color-surface: #0c0c0c;

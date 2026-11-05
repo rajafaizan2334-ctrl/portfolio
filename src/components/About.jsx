@@ -7,13 +7,14 @@ import candid from '../assets/processed/faizan-candid.webp'
 
 const FACTS = [
   ['Based in', 'Karachi, Pakistan (Remote)'],
-  ['Focus', 'LLM agents & automation'],
-  ['Currently', 'AI Engineer at UNITZERO'],
+  ['Focus', 'AI agents, automation & premium websites'],
+  ['Currently', `Founder, ${SITE.agency || 'AI agency & software studio'}`],
   ['Studying', 'BS Computer Science, FUUAST'],
 ]
 
 const BUILDING = [
   'AI agents and LLM assistants wired into business tools',
+  'Modern, luxury websites for brands that want to stand out',
   'Automation workflows that remove repetitive ops work',
   'Knowledge systems on top of company documents',
 ]
@@ -66,12 +67,12 @@ export default function About() {
             <div className="mt-4 rounded-lg border border-line bg-surface p-5">
               <div className="mono-label">Work status</div>
               <div className="mt-3 flex items-center gap-2 text-lg font-semibold text-ink">
-                <StatusDot /> Open to opportunities
+                <StatusDot /> Taking new projects
               </div>
-              <div className="mt-1 text-sm text-muted">Freelance · Full-time · Collaborations</div>
+              <div className="mt-1 text-sm text-muted">AI agents · Automations · Websites</div>
               <div className="mt-5 flex flex-wrap gap-2">
                 <a href="#contact" className="btn btn-primary h-10">
-                  Hire / contact me <HiArrowRight />
+                  Start a project <HiArrowRight />
                 </a>
                 {SITE.cvUrl && (
                   <a href={SITE.cvUrl} download className="btn btn-ghost h-10">
@@ -86,15 +87,16 @@ export default function About() {
             <Reveal as="p" className="text-lg leading-relaxed text-muted">
               I'm an AI Engineer who lives at the intersection of{' '}
               <span className="text-ink">large language models</span> and{' '}
-              <span className="text-ink">real-world operations</span>. I'm building AI agents and
-              LLM-powered assistants at <span className="text-ink">UNITZERO</span>, after automating
-              outbound and lead-gen pipelines for <span className="text-ink">Scaletopia</span> and 1.5
-              years freelancing — designing n8n workflows, RAG knowledge agents and calling agents for
-              clients across industries.
+              <span className="text-ink">real-world operations</span>. In October 2026 I started my
+              own AI agency and software studio. Before that I built AI agents and LLM assistants at{' '}
+              <span className="text-ink">UNITZERO</span>, automated outbound and lead-gen pipelines for{' '}
+              <span className="text-ink">Scaletopia</span>, and spent 1.5 years freelancing — designing
+              n8n workflows, RAG knowledge agents and calling agents for clients across industries.
             </Reveal>
             <Reveal as="p" delay={0.05} className="mt-5 text-lg leading-relaxed text-muted">
-              What I care about is pipelines that connect an LLM to a CRM, a webhook and a human
-              without falling over.
+              What I care about is systems that actually ship: pipelines that connect an LLM to a CRM, a
+              webhook and a human without falling over — and websites that look as premium as the
+              business behind them.
             </Reveal>
 
             <Reveal as="dl" delay={0.1} className="mt-10 border-t border-line">

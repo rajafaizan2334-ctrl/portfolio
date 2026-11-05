@@ -5,6 +5,7 @@ import StatusDot from './StatusDot.jsx'
 
 const LINKS = [
   { href: '#work', label: 'Work' },
+  { href: '#websites', label: 'Websites' },
   { href: '#experience', label: 'Experience' },
   { href: '#systems', label: 'Systems' },
   { href: '#about', label: 'About' },
@@ -73,7 +74,7 @@ export default function Navbar() {
             className="mono-label hidden items-center gap-2 rounded-full border border-line px-3 py-1.5 text-ink transition-colors hover:border-muted lg:inline-flex"
           >
             <StatusDot />
-            Available for work
+            Taking new projects
           </a>
 
           <button
@@ -112,7 +113,7 @@ export default function Navbar() {
               ))}
               <div className="mono-label mt-8 flex items-center gap-2 text-ink">
                 <StatusDot />
-                Available for work
+                Taking new projects
               </div>
             </nav>
           </motion.div>

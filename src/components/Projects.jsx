@@ -4,7 +4,7 @@ import { HiArrowsPointingOut, HiXMark } from 'react-icons/hi2'
 import SectionHeading from './SectionHeading.jsx'
 import FlowLine from './FlowLine.jsx'
 import Reveal from './Reveal.jsx'
-import { GhlMock, DashboardMock, SiteMock, RagMock } from './Mockups.jsx'
+import { GhlMock, DashboardMock, RagMock, JewelMock, EstateMock, SaasMock } from './Mockups.jsx'
 import emailReplySync from '../assets/work/email-reply-sync.webp'
 import smsInboundSync from '../assets/work/sms-inbound-sync.webp'
 import smsReplySender from '../assets/work/sms-reply-sender.webp'
@@ -119,19 +119,46 @@ const MORE = [
   },
 ]
 
-const INTERFACES = [
+const SHOWCASE_SITE = {
+  title: 'Luxury brand websites',
+  summary:
+    'Editorial layouts, refined serif typography and slow, deliberate motion — built to feel as premium as the product it sells.',
+  stack: 'React · Tailwind CSS · Framer Motion · CMS',
+  mock: JewelMock,
+  caption: 'Design concept',
+}
+
+const WEBSITES = [
   {
-    title: 'Dashboards & internal tools',
+    title: 'Real estate & hospitality',
+    summary: 'Full-bleed imagery, listing pages and enquiry forms that drop leads straight into your CRM.',
+    stack: 'React · CMS · CRM-connected forms',
+    mock: EstateMock,
+    caption: 'Design concept',
+  },
+  {
+    title: 'Modern SaaS & startup sites',
+    summary: 'Fast, animated product sites with clear messaging, pricing and sign-up flows.',
+    stack: 'React · Tailwind CSS · Framer Motion',
+    mock: SaasMock,
+    caption: 'Design concept',
+  },
+  {
+    title: 'Dashboards & web apps',
     summary: 'Front-ends for the automations — KPI views, review queues and admin panels.',
     stack: 'React · Python · Flask',
     mock: DashboardMock,
+    caption: 'Illustration',
   },
-  {
-    title: 'Client websites & web apps',
-    summary: '10+ web apps and sites shipped for clients, wired to forms, CRMs and automations.',
-    stack: 'React · JavaScript · TypeScript',
-    mock: SiteMock,
-  },
+]
+
+const WEB_FEATURES = [
+  'Custom design, no templates',
+  'Mobile-first & fast',
+  'Smooth, premium motion',
+  'SEO-ready',
+  'Easy to edit (CMS)',
+  'Forms → CRM & automations',
 ]
 
 function Field({ label, children }) {
@@ -166,11 +193,11 @@ function Shot({ shot, onOpen }) {
   )
 }
 
-function Illustration({ mock: Mock, className = '' }) {
+function Illustration({ mock: Mock, caption = 'Illustration', className = '' }) {
   return (
     <figure className={className}>
       <Mock />
-      <figcaption className="mono-label mt-2 px-1 text-dim">Illustration</figcaption>
+      <figcaption className="mono-label mt-2 px-1 text-dim">{caption}</figcaption>
     </figure>
   )
 }
@@ -291,7 +318,11 @@ function Project({ project, index, onOpen }) {
 function Card({ item, onOpen, index }) {
   return (
     <Reveal delay={index * 0.06} className="flex flex-col">
-      {item.shot ? <Shot shot={item.shot} onOpen={onOpen} /> : <Illustration mock={item.mock} />}
+      {item.shot ? (
+        <Shot shot={item.shot} onOpen={onOpen} />
+      ) : (
+        <Illustration mock={item.mock} caption={item.caption} />
+      )}
       <h4 className="mt-5 text-xl font-semibold text-ink">{item.title}</h4>
       <p className="mt-2 flex-1 text-sm leading-relaxed text-muted">{item.summary}</p>
       <div className="mt-4 border-t border-line pt-3 font-mono text-xs text-ink">{item.stack}</div>
@@ -340,10 +371,36 @@ export default function Projects() {
           </div>
         </div>
 
-        <div className="mt-20 md:mt-28">
-          <SubHeading label="Web + system development" title="I also build the interface around the system." />
-          <div className="grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-6">
-            {INTERFACES.map((item, i) => (
+        <div id="websites" className="mt-20 md:mt-28">
+          <SubHeading label="Websites & web development" title="Modern, luxurious websites — built to convert." />
+          <Reveal as="p" className="-mt-4 mb-8 max-w-2xl leading-relaxed text-muted">
+            Beyond automation, I design and build premium websites for brands that want to look the part —
+            from luxury storefronts to fast, modern product sites, all connected to your CRM and automations.
+          </Reveal>
+          <Reveal as="ul" className="mb-12 flex flex-wrap gap-2">
+            {WEB_FEATURES.map((f) => (
+              <li key={f} className="flex items-center gap-2 rounded-full border border-line px-3.5 py-1.5 text-sm text-ink">
+                <span className="h-1 w-1 rounded-full bg-accent" />
+                {f}
+              </li>
+            ))}
+          </Reveal>
+
+          <Reveal className="grid grid-cols-1 gap-8 lg:grid-cols-[1.6fr_1fr] lg:items-end">
+            <Illustration mock={SHOWCASE_SITE.mock} caption={SHOWCASE_SITE.caption} />
+            <div className="pb-8">
+              <div className="mono-label text-accent">Featured concept</div>
+              <h4 className="mt-3 text-2xl font-semibold text-ink sm:text-3xl">{SHOWCASE_SITE.title}</h4>
+              <p className="mt-3 leading-relaxed text-muted">{SHOWCASE_SITE.summary}</p>
+              <div className="mt-5 border-t border-line pt-3 font-mono text-xs text-ink">{SHOWCASE_SITE.stack}</div>
+              <a href="#contact" className="btn btn-primary mt-6">
+                Start a website project
+              </a>
+            </div>
+          </Reveal>
+
+          <div className="mt-14 grid grid-cols-1 gap-10 md:grid-cols-3 md:gap-6">
+            {WEBSITES.map((item, i) => (
               <Card key={item.title} item={item} index={i} onOpen={setOpen} />
             ))}
           </div>

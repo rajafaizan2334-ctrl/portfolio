@@ -47,10 +47,11 @@ const CAPABILITIES = [
     uses: ['Tool sync', 'Slack-driven pipelines', 'Automated reports'],
   },
   {
-    title: 'Web Apps & Interfaces',
-    summary: 'The interface around the system — 10+ web apps and dashboards built with Python and React.',
-    tools: ['Python', 'Flask', 'React', 'TypeScript'],
-    uses: ['Dashboards', 'Internal tools', 'Client web apps'],
+    title: 'Premium Websites & Web Apps',
+    summary:
+      'Modern, luxury websites and web apps — custom design, smooth motion, mobile-first, fast and SEO-ready, with forms wired into your CRM.',
+    tools: ['React', 'Tailwind CSS', 'Framer Motion', 'Python / Flask'],
+    uses: ['Luxury brand sites', 'Landing pages', 'Dashboards & web apps'],
   },
 ]
 

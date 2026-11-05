@@ -4,14 +4,26 @@ import { HiPlus, HiMinus } from 'react-icons/hi'
 import SectionHeading from './SectionHeading.jsx'
 import FlowLine from './FlowLine.jsx'
 import StatusDot from './StatusDot.jsx'
+import { SITE } from '../site.js'
 
 const EXPERIENCE = [
   {
+    role: 'Founder — AI Agency & Software Development',
+    org: SITE.agency || 'Self-founded studio',
+    period: 'Oct 2026 — Present',
+    location: 'Remote · Worldwide',
+    current: true,
+    points: [
+      'Run my own AI agency and software studio, delivering AI agents, workflow automations and custom software for clients.',
+      'Design and build modern, premium websites and web apps — from luxury brand sites to internal dashboards.',
+      'Own delivery end to end: scoping with the client, building, deploying and supporting systems in production.',
+    ],
+  },
+  {
     role: 'AI Engineer',
     org: 'UNITZERO (Pvt.) Ltd',
-    period: 'Oct 2025 — Present',
+    period: 'Oct 2025 — Oct 2026',
     location: 'Pakistan',
-    current: true,
     points: [
       'Design and deploy AI agents, LLM-powered assistants, and chatbots integrated with business tools, APIs, and knowledge bases.',
       'Build and maintain automation workflows that streamline operations and reduce manual effort on repetitive tasks.',
